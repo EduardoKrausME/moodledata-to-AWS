@@ -1,4 +1,8 @@
-# moodledata-to-AWS
+# moodledata to AWS
+
+Este plug-in, Open Source, envia seus arquivos da pasta ```moodledata/filedir``` para a Amazon S3 e gerencia sua entrega.
+
+This plug-in, Open Source, send your files in the folder ```moodledata/filedir``` to Amazon S3 and manages their delivery.
 
 ## PT_BR: Instalação
 
