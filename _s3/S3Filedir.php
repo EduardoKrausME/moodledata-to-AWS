@@ -44,7 +44,7 @@ class S3Filedir extends SendS3
             if ( !$this->testCreateColumn ( $file ) )
                 return false;
 
-            if ( $file->statusamazon == 'nao' )
+            if ( $file->statusamazon != 'private' && $file->statusamazon != 'public' )
                 $this->sendToAws ( $file );
 
             header ( 'Location: ' . $this->getTokenUrl ( $file->contenthash, $file->statusamazon ) );
