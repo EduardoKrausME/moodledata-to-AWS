@@ -16,49 +16,55 @@ class S3Filedir extends SendS3
      * @param $relativepath
      * @throws coding_exception
      */
-    public function isFileInAmazon ( $relativepath )
-    {
+    public function isFileInAmazon ( $relativepath ) {
         global $DB;
 
-        $args = explode('/', ltrim($relativepath, '/'));
+        $args = explode ( '/', ltrim ( $relativepath, '/' ) );
 
         $contextid = (int) array_shift ( $args );
         $component = clean_param ( array_shift ( $args ), PARAM_COMPONENT );
-        $filearea  = clean_param ( array_shift ( $args ), PARAM_AREA );
+        $filearea = clean_param ( array_shift ( $args ), PARAM_AREA );
 
-        $sql = "SELECT * FROM {files}
-                 WHERE contextid =  " . $contextid . "
-                   AND component = '" . $component . "'
-                   AND filearea  = '" . $filearea . "'
+        $sql = "SELECT *
+                  FROM {files}
+                 WHERE contextid = :contextid
+                   AND component = :component
+                   AND filearea  = :filearea
                    AND filename != '.'";
-        $result = $DB->get_records_sql( $sql );
+        $result = $DB->get_records_sql ( $sql, array (
+                    'contextid' => $contextid,
+                    'component' => $component,
+                    'filearea'  => $filearea
+                ) );
 
-        if( count($result) > 1 )
-            return;
+        if ( count ( $result ) > 1 )
+            return false;
 
-        foreach($result as $file)
-        {
+        foreach ( $result as $file ) {
             if ( !$this->testCreateColumn ( $file ) )
-                return;
+                return false;
 
-            if( $file->statusamazon == 'nao' )
+            if ( $file->statusamazon == 'nao' )
                 $this->sendToAws ( $file );
 
-            header('Location: '. $this->getTokenUrl ( $file->contenthash, $file->statusamazon ) );
+            header ( 'Location: ' . $this->getTokenUrl ( $file->contenthash, $file->statusamazon ) );
             die();
         }
-        return;
+
+        return false;
     }
 
-    private function testCreateColumn ( $file )
-    {
-        global $CFG, $DB;
-        if ( !isset( $file->statusamazon ) ) {
-            try{
-                $DB->change_database_structure ( "ALTER TABLE `" . $CFG->prefix . "files` ADD `statusamazon` ENUM('nao','private','public') NOT NULL DEFAULT 'nao' AFTER `status` " );
-            }catch ( Exception $e ){}
+    private function testCreateColumn ( $file ) {
+        global $DB;
 
-            return false;
+        if ( !isset( $file->statusamazon ) ) {
+            $table = new xmldb_table( 'file' );
+            $field = new xmldb_field( 'statusamazon', XMLDB_TYPE_TEXT, 'medium', null, null, null, null, 'status' );
+
+            $dbman = $DB->get_manager ();
+            if ( !$dbman->field_exists ( $table, $field ) ) {
+                $dbman->add_field ( $table, $field );
+            }
         }
 
         return true;
@@ -67,8 +73,7 @@ class S3Filedir extends SendS3
     /**
      * @param $file
      */
-    private function sendToAws ( $file )
-    {
+    private function sendToAws ( $file ) {
         global $DB;
 
         $isPrivate = strpos ( $file->component, 'mod_' ) === 0;

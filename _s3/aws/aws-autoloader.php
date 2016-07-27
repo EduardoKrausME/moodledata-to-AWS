@@ -1362,6 +1362,7 @@ $aws_s3_mapping = array(
     'S3Util'        => dirname ( __DIR__ . '/../..' ) . '/S3Util.php',
     'S3YuiCombo'    => dirname ( __DIR__ . '/../..' ) . '/S3YuiCombo.php',
     'SendS3'        => dirname ( __DIR__ . '/../..' ) . '/SendS3.php',
+    'S3Assets'      => dirname ( __DIR__ . '/../..' ) . '/S3Assets.php',
 );
 
 spl_autoload_register (
