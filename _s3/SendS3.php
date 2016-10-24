@@ -94,8 +94,8 @@ class SendS3
     }
 
     /**
-     * @param $file_contenthash
-     * @param $file_statusamazon
+     * @param  $file_contenthash
+     * @param  $file_statusamazon
      * @return string
      */
     public function getTokenUrl ( $file_contenthash, $file_statusamazon )

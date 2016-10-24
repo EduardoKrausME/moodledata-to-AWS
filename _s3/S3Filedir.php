@@ -14,7 +14,7 @@ class S3Filedir extends SendS3
 {
     /**
      * @param $relativepath
-     * @throws coding_exception
+     * @return bool
      */
     public function isFileInAmazon ( $relativepath ) {
         global $DB;

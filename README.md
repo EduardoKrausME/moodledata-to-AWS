@@ -19,9 +19,6 @@ if ( strpos ( $_SERVER[ 'REQUEST_URI' ], 'pluginfile.php' ) ) {
     $CFG->aws_s3_bucket = 'Nome do Bucket';
 
     require_once ( dirname ( __FILE__ ) . '/_s3/_load.php' );
-
-    $file = new S3Filedir();
-    $file->isFileInAmazon ( get_file_argument () );
 }
 ```
 
@@ -42,9 +39,6 @@ if ( strpos ( $_SERVER[ 'REQUEST_URI' ], 'pluginfile.php' ) ) {
     $CFG->aws_s3_bucket = 'Bucket Name';
 
     require_once ( dirname ( __FILE__ ) . '/_s3/_load.php' );
-
-    $file = new S3Filedir();
-    $file->isFileInAmazon ( get_file_argument () );
 }
 ```
 
