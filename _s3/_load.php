@@ -6,9 +6,6 @@
  * Time: 22:50
  ***************************/
 
-error_reporting ( 0 );
-ini_set ( 'display_errors', 'Off' );
-
 if ( !isset( $aws_s3_mapping ) ) {
     require_once __DIR__ . 'S3Filedir.php';
     require_once __DIR__ . '/aws/aws-autoloader.php';
